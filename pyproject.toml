@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-subdomains-ng"
+description = "Subdomain-based URL routing and reversing for Django."
+readme = "README.rst"
+requires-python = ">=3.10"
+dependencies = ["Django>=5.2"]
+license = "MIT"
+license-files = ["LICENSE"]
+dynamic = ["version"]
+classifiers = [
+    "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Upstream = "https://github.com/tkaemming/django-subdomains"
+
+[tool.setuptools.packages.find]
+include = ["subdomains", "subdomains.templatetags"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+version = {attr = "subdomains.__version__"}
