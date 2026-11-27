@@ -11,7 +11,12 @@ def current_site_domain():
     return Site.objects.get_current().domain
 
 
-get_domain = current_site_domain
+def get_domain():
+    """Return the configured base domain or the current Site's domain."""
+    domain = getattr(settings, 'SUBDOMAIN_BASE_DOMAIN', None)
+    if domain is None:
+        return current_site_domain()
+    return domain
 
 
 def urljoin(domain, path=None, scheme=None):

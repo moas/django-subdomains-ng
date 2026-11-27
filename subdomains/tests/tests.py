@@ -2,11 +2,35 @@ from unittest import mock
 
 from django.contrib.sites.models import Site
 from django.template import Context, Template
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import NoReverseMatch, get_urlconf, set_urlconf
 
 from subdomains.middleware import SubdomainMiddleware, SubdomainURLRoutingMiddleware
 from subdomains.utils import reverse, urljoin
+
+
+@override_settings(
+    INSTALLED_APPS=['subdomains'],
+    ALLOWED_HOSTS=['.example.org'],
+    SUBDOMAIN_BASE_DOMAIN='example.org',
+)
+class ConfiguredBaseDomainTests(SimpleTestCase):
+    def test_routes_requests_without_sites(self):
+        response = self.client.get('/view/', headers={'host': 'api.example.org'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.wsgi_request.subdomain, 'api')
+        self.assertEqual(
+            self.client.get('/view/', headers={'host': 'example.org'}).status_code, 404
+        )
+
+    def test_reverses_urls_without_sites(self):
+        self.assertEqual(reverse('home'), 'http://example.org/')
+        self.assertEqual(reverse('view', subdomain='api'), 'http://api.example.org/view/')
+
+    def test_renders_template_urls_without_sites(self):
+        template = Template("{% load subdomainurls %}{% url 'view' subdomain='api' %}")
+        self.assertEqual(template.render(Context()), 'http://api.example.org/view/')
 
 
 class SubdomainTestMixin:

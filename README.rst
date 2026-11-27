@@ -23,7 +23,7 @@ The Python package is imported as ``subdomains``.
 Configuration
 -------------
 
-Add ``django.contrib.sites`` and ``subdomains`` to ``INSTALLED_APPS``.
+Add ``subdomains`` to ``INSTALLED_APPS``.
 Add ``subdomains.middleware.SubdomainURLRoutingMiddleware`` to ``MIDDLEWARE``
 before ``django.middleware.common.CommonMiddleware`` if you use it, so
 slash redirects from CommonMiddleware also carry ``Vary: Host``.
@@ -31,7 +31,7 @@ slash redirects from CommonMiddleware also carry ``Vary: Host``.
 .. code-block:: python
 
     ALLOWED_HOSTS = [".example.com"]
-    SITE_ID = 1
+    SUBDOMAIN_BASE_DOMAIN = "example.com"
 
     ROOT_URLCONF = "myproject.urls"
     SUBDOMAIN_URLCONFS = {
@@ -39,9 +39,14 @@ slash redirects from CommonMiddleware also carry ``Vary: Host``.
         "api": "myproject.api_urls",
     }
 
-Run ``python manage.py migrate`` with your project's settings and set the
-domain of the site identified by ``SITE_ID`` to ``example.com``. Replace
-the example URLconf paths with modules in your project.
+Set ``SUBDOMAIN_BASE_DOMAIN`` to a hostname such as ``example.com``.
+Routing and URL generation both use this setting. Replace the example
+URLconf paths with modules in your project.
+
+To use Django Sites instead, omit ``SUBDOMAIN_BASE_DOMAIN``, add
+``django.contrib.sites`` to ``INSTALLED_APPS``, run
+``python manage.py migrate``, and set ``SITE_ID`` to the Site whose domain
+you want to use.
 
 The middleware sets ``request.subdomain`` and selects a URLconf from
 ``SUBDOMAIN_URLCONFS``. Valid subdomains without a mapping use

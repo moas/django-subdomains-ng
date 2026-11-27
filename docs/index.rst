@@ -19,14 +19,16 @@ Quick Start
 
 To set up subdomain URL routing and reversing in a Django project:
 
-1. Add ``django.contrib.sites`` and ``subdomains`` to ``INSTALLED_APPS``.
+1. Add ``subdomains`` to ``INSTALLED_APPS``.
 2. Add :class:`subdomains.middleware.SubdomainURLRoutingMiddleware` to
    ``MIDDLEWARE``. Place it before
    `CommonMiddleware <https://docs.djangoproject.com/en/5.2/ref/middleware/#django.middleware.common.CommonMiddleware>`_ so the routing
    middleware also adds ``Vary: Host`` to slash redirects.
 3. Configure ``ALLOWED_HOSTS`` and ``SUBDOMAIN_URLCONFS``.
-4. Run the Django migrations and set ``SITE_ID``. Set the domain of that
-   site to the base domain where users will access your project.
+4. Set ``SUBDOMAIN_BASE_DOMAIN`` to the base hostname used for routing and
+   URL generation. To use Django Sites instead, omit the setting, add
+   ``django.contrib.sites`` to ``INSTALLED_APPS``, run migrations, and set
+   ``SITE_ID`` to the Site with the desired domain.
 
 Example Configuration
 ~~~~~~~~~~~~~~~~~~~~~
@@ -34,7 +36,7 @@ Example Configuration
 ::
 
     ALLOWED_HOSTS = ['.example.com']
-    SITE_ID = 1
+    SUBDOMAIN_BASE_DOMAIN = 'example.com'
 
     # Unmapped subdomains use the project's root URLconf.
     ROOT_URLCONF = 'myproject.urls.account'
