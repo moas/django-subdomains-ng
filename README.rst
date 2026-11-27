@@ -83,7 +83,15 @@ Development and release
     make test
 
 Run ``make test-matrix`` with tox and the supported Python interpreters
-installed. To build and validate the distributions for PyPI:
+installed.
+
+Pushing a version tag such as ``v0.1.0`` starts the **Release distributions**
+workflow. The tag must match the package version. The workflow builds and
+validates the wheel and source distribution, then makes both files available
+as a GitHub Actions artifact. Download the files to upload them manually to
+PyPI.
+
+To build and validate the distributions locally:
 
 .. code-block:: bash
 
